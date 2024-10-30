@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz App</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <!-- Opcional: Seu CSS personalizado -->
+    <!-- <link rel="stylesheet" href="css/styles.css"> -->
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Quiz App</h1>
+        <button id="createQuizBtn" class="btn btn-primary mb-3">Create Quiz</button>
+        
+        <!-- Tabela de Quizzes -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Quiz Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="quizTableBody">
+                <!-- Os quizzes serão carregados aqui dinamicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para criar quiz -->
+    <div class="modal fade" id="createQuizModal" tabindex="-1" aria-labelledby="createQuizModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create Quiz</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="quizForm">
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label for="quizName">Quiz Name</label>
+                      <input type="text" class="form-control" id="quizName" required>
+                  </div>
+                  <div id="questionsContainer">
+                      <!-- As perguntas serão adicionadas aqui -->
+                  </div>
+                  <button type="button" class="btn btn-secondary" id="addQuestionBtn">Add Question</button>
+              </div>
+              <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save Quiz</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts necessários -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Bootstrap JS e dependências -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <!-- Seu script personalizado -->
+    <script src="js/main.js"></script>
+</body>
+</html>
