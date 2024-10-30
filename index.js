@@ -8,7 +8,7 @@ const passwordProtect = require('./middlewares/passwordProtect');
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(passwordProtect);
+app.use('/index.html', passwordProtect);
 app.use('/edit.html', passwordProtect);
 
 app.use(express.static(path.join(__dirname, 'public')));
