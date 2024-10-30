@@ -3,7 +3,7 @@ const router = express.Router();
 const { CosmosClient } = require('@azure/cosmos');
 require('dotenv').config();
 
-// Configurações do CosmosDB
+// CosmosDB Settings
 const endpoint = process.env.COSMOSDB_URI;
 const key = process.env.COSMOSDB_KEY;
 const client = new CosmosClient({ endpoint, key });
@@ -12,13 +12,13 @@ const databaseId = process.env.COSMOSDB_DATABASE;
 const containerId = process.env.COSMOSDB_CONTAINER;
 
 async function initCosmos() {
-    // Definir o throughput no nível do banco de dados (por exemplo, 400 RU/s)
+    // Set throughput at the database level (e.g. 400 RU/s)
     const { database } = await client.databases.createIfNotExists(
         { id: databaseId },
         { offerThroughput: 400 } // Ajuste esse valor conforme necessário
     );
 
-    // Criar o contêiner sem especificar o throughput (herdará o throughput do banco de dados)
+    // Create container without specifying throughput (will inherit throughput from database)
     const { container } = await database.containers.createIfNotExists({ id: containerId });
 
     return container;
@@ -26,28 +26,28 @@ async function initCosmos() {
 
 const containerPromise = initCosmos();
 
-// Endpoint para registrar um novo quiz
+// Endpoint to register a new quiz
 router.post('/register', async (req, res) => {
     try {
         const newQuiz = req.body;
 
-        // Validar o formato do quiz
+        // Validate the quiz format
         if (!newQuiz.quizName || !newQuiz.questions) {
-            return res.status(400).json({ error: 'Formato inválido do quiz' });
+            return res.status(400).json({ error: 'Invalid quiz format' });
         }
 
         const container = await containerPromise;
 
-        // Adicionar um ID único ao quiz
+        // Add a unique ID to the quiz
         newQuiz.id = Date.now().toString();
 
-        // Inserir o quiz no CosmosDB
+        // Embed the quiz in CosmosDB
         await container.items.create(newQuiz);
 
-        res.status(201).json({ message: 'Quiz registrado com sucesso!', quizId: newQuiz.id });
+        res.status(201).json({ message: 'Quiz registered successfully!', quizId: newQuiz.id });
     } catch (error) {
-        console.error('Erro ao registrar o quiz:', error);
-        res.status(500).json({ error: 'Erro ao registrar o quiz' });
+        console.error('Error registering quiz:', error);
+        res.status(500).json({ error: 'Error registering quiz' });
     }
 });
 
@@ -64,8 +64,8 @@ router.get('/all', async (req, res) => {
 
         res.json(quizzes);
     } catch (error) {
-        console.error('Erro ao obter os quizzes:', error);
-        res.status(500).json({ error: 'Erro ao obter os quizzes' });
+        console.error('Error getting quizzes:', error);
+        res.status(500).json({ error: 'Error getting quizzes' });
     }
 });
 
@@ -75,7 +75,7 @@ router.get('/search', async (req, res) => {
         const { id, name } = req.query;
 
         if (!id && !name) {
-            return res.status(400).json({ error: 'Por favor, forneça o ID ou o nome do quiz para a busca.' });
+            return res.status(400).json({ error: 'Please provide the quiz ID or name for search.' });
         }
 
         const container = await containerPromise;
@@ -103,13 +103,13 @@ router.get('/search', async (req, res) => {
         const { resources: quizzes } = await container.items.query(querySpec).fetchAll();
 
         if (quizzes.length === 0) {
-            return res.status(404).json({ message: 'Quiz não encontrado.' });
+            return res.status(404).json({ message: 'Quiz not found.' });
         }
 
         res.json(quizzes[0]);
     } catch (error) {
-        console.error('Erro ao buscar o quiz:', error);
-        res.status(500).json({ error: 'Erro ao buscar o quiz' });
+        console.error('Error fetching quiz:', error);
+        res.status(500).json({ error: 'Error fetching quiz' });
     }
 });
 
@@ -120,7 +120,7 @@ router.put('/edit/:id', async (req, res) => {
 
         // Validar o formato do quiz atualizado
         if (!updatedQuiz.quizName || !updatedQuiz.questions) {
-            return res.status(400).json({ error: 'Formato inválido do quiz' });
+            return res.status(400).json({ error: 'Invalid quiz format' });
         }
 
         const container = await containerPromise;
@@ -129,7 +129,7 @@ router.put('/edit/:id', async (req, res) => {
         const { resource: existingQuiz } = await container.item(id).read();
 
         if (!existingQuiz) {
-            return res.status(404).json({ message: 'Quiz não encontrado.' });
+            return res.status(404).json({ message: 'Quiz not found.' });
         }
 
         // Manter o mesmo ID e outras propriedades do sistema
@@ -139,10 +139,10 @@ router.put('/edit/:id', async (req, res) => {
         // Atualizar o quiz no CosmosDB
         const { resource: replacedQuiz } = await container.item(id).replace(updatedQuiz);
 
-        res.json({ message: 'Quiz atualizado com sucesso!', quiz: replacedQuiz });
+        res.json({ message: 'Quiz updated successfully!', quiz: replacedQuiz });
     } catch (error) {
-        console.error('Erro ao editar o quiz:', error);
-        res.status(500).json({ error: 'Erro ao editar o quiz' });
+        console.error('Error editing quiz:', error);
+        res.status(500).json({ error: 'Error editing quiz' });
     }
 });
 
@@ -156,16 +156,16 @@ router.delete('/delete/:id', async (req, res) => {
         const { resource: quiz } = await container.item(id).read();
 
         if (!quiz) {
-            return res.status(404).json({ message: 'Quiz não encontrado.' });
+            return res.status(404).json({ message: 'Quiz not found.' });
         }
 
         // Deletar o item
         await container.item(id).delete();
 
-        res.json({ message: 'Quiz deletado com sucesso!' });
+        res.json({ message: 'Quiz deleted successfully!' });
     } catch (error) {
-        console.error('Erro ao deletar o quiz:', error);
-        res.status(500).json({ error: 'Erro ao deletar o quiz' });
+        console.error('Error deleting quiz:', error);
+        res.status(500).json({ error: 'Error deleting quiz' });
     }
 });
 

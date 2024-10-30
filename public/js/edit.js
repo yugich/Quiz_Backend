@@ -61,7 +61,7 @@ $(document).ready(function() {
                 });
             },
             error: function() {
-                alert('Erro ao carregar o quiz.');
+                alert('Error to load the Quiz.');
                 window.close();
             }
         });
@@ -156,7 +156,7 @@ $(document).ready(function() {
             quizName: quizName,
             questions: questions
         };
-        console.log('Dados enviados para edição:', quizData); 
+        console.log('Data sent for editing:', quizData); 
         // Enviar o quiz atualizado para o backend
         $.ajax({
             url: `/api/quiz/edit/${quizId}`,
@@ -174,7 +174,7 @@ $(document).ready(function() {
     });
     $('#deleteQuizBtn').click(function() {
         const quizId = $('#quizId').val();
-        if (confirm('Tem certeza de que deseja deletar este quiz?')) {
+        if (confirm('Are you sure you want to delete this quiz?')) {
             $.ajax({
                 url: `/api/quiz/delete/${quizId}`,
                 method: 'DELETE',
@@ -183,7 +183,7 @@ $(document).ready(function() {
                     window.close();
                 },
                 error: function(xhr) {
-                    alert('Erro ao deletar o quiz: ' + xhr.responseJSON.error);
+                    alert('Error to delete the quiz: ' + xhr.responseJSON.error);
                 }
             });
         }

@@ -1,62 +1,63 @@
-# Projeto Quiz App com Node.js e Azure Cosmos DB
+# Quiz App Project with Node.js and Azure Cosmos DB
 
-Este projeto é uma aplicação web construída com Node.js, Express e Azure Cosmos DB, que permite criar, editar, visualizar e deletar quizzes interativos. A aplicação inclui um front-end em HTML, CSS e JavaScript, utilizando o Bootstrap para estilização, e implementa autenticação básica com proteção por senha.
+This project is a web application built with Node.js, Express, and Azure Cosmos DB, allowing you to create, edit, view, and delete interactive quizzes. The application includes a front-end in HTML, CSS, and JavaScript, utilizing Bootstrap for styling, and implements basic authentication with password protection.
 
-## Índice
+## Table of Contents
 
-- [Recursos Utilizados](#recursos-utilizados)
-- [Pré-requisitos](#pré-requisitos)
-- [Instalação](#instalação)
-- [Configuração](#configuração)
-- [Execução](#execução)
-- [Uso](#uso)
+- [Resources Used](#resources-used)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running the Application](#running-the-application)
+- [Usage](#usage)
   - [Front-end](#front-end)
   - [API Endpoints](#api-endpoints)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Autenticação](#autenticação)
-- [Considerações de Segurança](#considerações-de-segurança)
-- [Problemas Conhecidos e Soluções](#problemas-conhecidos-e-soluções)
-- [Licença](#licença)
+- [Project Structure](#project-structure)
+- [Authentication](#authentication)
+- [Security Considerations](#security-considerations)
+- [Known Issues and Solutions](#known-issues-and-solutions)
+- [License](#license)
+- [Contact](#contact)
 
 ---
 
-## Recursos Utilizados
+## Resources Used
 
-- **Node.js**: Ambiente de execução JavaScript no lado do servidor.
-- **Express**: Framework web para Node.js.
-- **Azure Cosmos DB**: Banco de dados NoSQL totalmente gerenciado, utilizado para armazenar os quizzes.
-- **Bootstrap**: Biblioteca front-end para estilização responsiva.
-- **jQuery**: Biblioteca JavaScript para manipulação do DOM e requisições AJAX.
-- **dotenv**: Carregar variáveis de ambiente a partir de um arquivo `.env`.
-- **cookie-parser**: Middleware para parsear cookies em requisições HTTP.
-- **@azure/cosmos**: SDK do Azure Cosmos DB para Node.js.
-
----
-
-## Pré-requisitos
-
-- **Node.js** instalado (versão 12 ou superior).
-- **NPM** (geralmente instalado junto com o Node.js).
-- Conta no **Azure** com acesso ao **Cosmos DB** ou **Azure Cosmos DB Emulator** instalado localmente.
-- **Git** (opcional, para clonar o repositório).
+- **Node.js**: Server-side JavaScript runtime environment.
+- **Express**: Web framework for Node.js.
+- **Azure Cosmos DB**: Fully managed NoSQL database used to store the quizzes.
+- **Bootstrap**: Front-end library for responsive styling.
+- **jQuery**: JavaScript library for DOM manipulation and AJAX requests.
+- **dotenv**: Load environment variables from a `.env` file.
+- **cookie-parser**: Middleware to parse cookies in HTTP requests.
+- **@azure/cosmos**: Azure Cosmos DB SDK for Node.js.
 
 ---
 
-## Instalação
+## Prerequisites
 
-1. **Clone o repositório ou baixe os arquivos do projeto**:
+- **Node.js** installed (version 12 or higher).
+- **NPM** (usually installed with Node.js).
+- An **Azure** account with access to **Cosmos DB** or **Azure Cosmos DB Emulator** installed locally.
+- **Git** (optional, to clone the repository).
+
+---
+
+## Installation
+
+1. **Clone the repository or download the project files**:
 
    ```bash
-   git clone https://github.com/seu-usuario/seu-repositorio.git
+   git clone https://github.com/your-username/your-repository.git
    ```
 
-2. **Acesse o diretório do projeto**:
+2. **Navigate to the project directory**:
 
    ```bash
-   cd seu-repositorio
+   cd your-repository
    ```
 
-3. **Instale as dependências do projeto**:
+3. **Install the project dependencies**:
 
    ```bash
    npm install
@@ -64,56 +65,56 @@ Este projeto é uma aplicação web construída com Node.js, Express e Azure Cos
 
 ---
 
-## Configuração
+## Configuration
 
-1. **Configurar o Azure Cosmos DB**:
+1. **Configure Azure Cosmos DB**:
 
-   - Crie uma conta no [portal do Azure](https://portal.azure.com) se ainda não tiver.
-   - Crie uma instância do **Azure Cosmos DB** com a API **Core (SQL)**.
-   - Anote o **URI** e a **Chave Primária** do Cosmos DB.
+   - Create an account on the [Azure portal](https://portal.azure.com) if you don't have one.
+   - Create an instance of **Azure Cosmos DB** with the **Core (SQL)** API.
+   - Note the **URI** and **Primary Key** of the Cosmos DB.
 
-2. **Criar o arquivo `.env` na raiz do projeto**:
+2. **Create the `.env` file at the root of the project**:
 
-   Crie um arquivo chamado `.env` e adicione as seguintes variáveis de ambiente:
+   Create a file named `.env` and add the following environment variables:
 
    ```env
-   COSMOSDB_URI=<SEU_COSMOSDB_URI>
-   COSMOSDB_KEY=<SUA_COSMOSDB_CHAVE_PRIMÁRIA>
+   COSMOSDB_URI=<YOUR_COSMOSDB_URI>
+   COSMOSDB_KEY=<YOUR_COSMOSDB_PRIMARY_KEY>
    COSMOSDB_DATABASE=QuizDatabase
    COSMOSDB_CONTAINER=Quizzes
-   PASSWORD=<SUA_SENHA_DESEJADA>
+   PASSWORD=<YOUR_DESIRED_PASSWORD>
    PORT=3000
    ```
 
-   - Substitua `<SEU_COSMOSDB_URI>` pelo URI do seu Cosmos DB.
-   - Substitua `<SUA_COSMOSDB_CHAVE_PRIMÁRIA>` pela chave primária do seu Cosmos DB.
-   - Substitua `<SUA_SENHA_DESEJADA>` pela senha que deseja utilizar para proteção da aplicação.
+   - Replace `<YOUR_COSMOSDB_URI>` with your Cosmos DB URI.
+   - Replace `<YOUR_COSMOSDB_PRIMARY_KEY>` with your Cosmos DB primary key.
+   - Replace `<YOUR_DESIRED_PASSWORD>` with the password you wish to use for application protection.
 
-3. **Certifique-se de que o arquivo `.env` está no `.gitignore`** para não versionar informações sensíveis.
+3. **Ensure that the `.env` file is in the `.gitignore`** to avoid versioning sensitive information.
 
 ---
 
-## Execução
+## Running the Application
 
-Inicie o servidor com o comando:
+Start the server with the command:
 
 ```bash
 node index.js
 ```
 
-Você verá a mensagem:
+You will see the message:
 
 ```
-Servidor rodando na porta 3000
+Server running on port 3000
 ```
 
 ---
 
-## Uso
+## Usage
 
 ### Front-end
 
-1. **Acesse a aplicação no navegador**:
+1. **Access the application in the browser**:
 
    ```
    http://localhost:3000/
@@ -121,56 +122,56 @@ Servidor rodando na porta 3000
 
 2. **Login**:
 
-   - Você será redirecionado para a página de login.
-   - Insira a senha definida no arquivo `.env`.
-   - Após o login bem-sucedido, você será redirecionado para a página principal.
+   - You will be redirected to the login page.
+   - Enter the password defined in the `.env` file.
+   - After a successful login, you will be redirected to the main page.
 
-3. **Criar um Quiz**:
+3. **Create a Quiz**:
 
-   - Clique no botão **"Create Quiz"**.
-   - Preencha o nome do quiz.
-   - Adicione perguntas e respostas dinamicamente.
-     - Para cada pergunta, você pode adicionar múltiplas respostas.
-     - Marque a caixa **"Is True"** para indicar as respostas corretas.
-   - Clique em **"Save Quiz"** para salvar.
+   - Click the **"Create Quiz"** button.
+   - Fill in the quiz name.
+   - Add questions and answers dynamically.
+     - For each question, you can add multiple answers.
+     - Check the **"Is True"** box to indicate the correct answers.
+   - Click **"Save Quiz"** to save.
 
-4. **Visualizar Quizzes**:
+4. **View Quizzes**:
 
-   - Abaixo do botão "Create Quiz", você verá uma tabela listando todos os quizzes com **ID**, **Nome** e **Ações**.
+   - Below the "Create Quiz" button, you will see a table listing all quizzes with **ID**, **Name**, and **Actions**.
 
-5. **Editar um Quiz**:
+5. **Edit a Quiz**:
 
-   - Clique no botão **"Edit"** correspondente ao quiz que deseja editar.
-   - Uma nova aba será aberta com o formulário preenchido com os dados atuais.
-   - Faça as alterações desejadas e clique em **"Save Quiz"**.
+   - Click the **"Edit"** button corresponding to the quiz you want to edit.
+   - A new tab will open with the form pre-filled with the current data.
+   - Make the desired changes and click **"Save Quiz"**.
 
-6. **Deletar um Quiz**:
+6. **Delete a Quiz**:
 
-   - Clique no botão **"Delete"** correspondente ao quiz que deseja excluir.
-   - Confirme a ação na janela de confirmação.
-   - O quiz será removido da lista.
+   - Click the **"Delete"** button corresponding to the quiz you want to delete.
+   - Confirm the action in the confirmation window.
+   - The quiz will be removed from the list.
 
 ### API Endpoints
 
-A aplicação expõe os seguintes endpoints:
+The application exposes the following endpoints:
 
-- **Registrar um Quiz**:
+- **Register a Quiz**:
 
   ```
   POST /api/quiz/register
   ```
 
-  - Corpo da requisição (JSON):
+  - Request body (JSON):
 
     ```json
     {
-      "quizName": "Nome do Quiz",
+      "quizName": "Quiz Name",
       "questions": [
         {
-          "question": "Texto da Pergunta",
+          "question": "Question Text",
           "answers": [
             {
-              "answer": "Texto da Resposta",
+              "answer": "Answer Text",
               "isTrue": true
             }
           ]
@@ -179,28 +180,28 @@ A aplicação expõe os seguintes endpoints:
     }
     ```
 
-- **Obter Todos os Quizzes**:
+- **Get All Quizzes**:
 
   ```
   GET /api/quiz/all
   ```
 
-- **Buscar um Quiz por ID ou Nome**:
+- **Search a Quiz by ID or Name**:
 
   ```
   GET /api/quiz/search?id={id}
-  GET /api/quiz/search?name={nome}
+  GET /api/quiz/search?name={name}
   ```
 
-- **Editar um Quiz**:
+- **Edit a Quiz**:
 
   ```
   PUT /api/quiz/edit/{id}
   ```
 
-  - Corpo da requisição (JSON): Mesmo formato do registro de quiz.
+  - Request body (JSON): Same format as quiz registration.
 
-- **Deletar um Quiz**:
+- **Delete a Quiz**:
 
   ```
   DELETE /api/quiz/delete/{id}
@@ -208,88 +209,88 @@ A aplicação expõe os seguintes endpoints:
 
 ---
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 ├── api
-│   └── quiz-register.js       # Rotas da API para gerenciamento de quizzes
+│   └── quiz-register.js       # API routes for quiz management
 ├── middlewares
-│   └── passwordProtect.js     # Middleware para proteção por senha
+│   └── passwordProtect.js     # Middleware for password protection
 ├── public
-│   ├── index.html             # Página principal
-│   ├── edit.html              # Página de edição de quizzes
-│   ├── login.html             # Página de login
+│   ├── index.html             # Main page
+│   ├── edit.html              # Quiz editing page
+│   ├── login.html             # Login page
 │   ├── css
-│   │   └── styles.css         # (Opcional) Arquivo de estilos personalizados
+│   │   └── styles.css         # (Optional) Custom styles file
 │   └── js
-│       ├── main.js            # Script da página principal
-│       ├── edit.js            # Script da página de edição
-│       └── login.js           # Script da página de login (se necessário)
-├── .env                       # Variáveis de ambiente (não versionado)
-├── index.js                   # Arquivo principal do servidor
-├── package.json               # Dependências e scripts do projeto
-└── README.md                  # Documentação do projeto
+│       ├── main.js            # Script for the main page
+│       ├── edit.js            # Script for the edit page
+│       └── login.js           # Script for the login page (if necessary)
+├── .env                       # Environment variables (not versioned)
+├── index.js                   # Main server file
+├── package.json               # Project dependencies and scripts
+└── README.md                  # Project documentation
 ```
 
 ---
 
-## Autenticação
+## Authentication
 
-A aplicação implementa uma proteção por senha simples usando cookies HTTP.
+The application implements simple password protection using HTTP cookies.
 
-- **Middleware `passwordProtect`**:
+- **`passwordProtect` Middleware**:
 
-  - Intercepta todas as requisições e verifica se o usuário está autenticado.
-  - Permite acesso sem autenticação às rotas `/login.html`, `/login` e quaisquer rotas que comecem com `/chat`.
-  - Redireciona para `/login.html` caso o usuário não esteja autenticado.
+  - Intercepts all requests and checks if the user is authenticated.
+  - Allows access without authentication to the routes `/login.html`, `/login`, and any routes starting with `/chat`.
+  - Redirects to `/login.html` if the user is not authenticated.
 
-- **Rota `/login`**:
+- **Route `/login`**:
 
-  - Processa o formulário de login.
-  - Verifica se a senha fornecida corresponde à senha definida no arquivo `.env`.
-  - Define um cookie `authToken` com a senha em caso de sucesso.
+  - Processes the login form.
+  - Checks if the provided password matches the password defined in the `.env` file.
+  - Sets an `authToken` cookie with the password upon success.
 
 - **Logout**:
 
-  - Para implementar o logout, basta limpar o cookie `authToken` no cliente ou criar uma rota `/logout` que remova o cookie.
+  - To implement logout, simply clear the `authToken` cookie on the client or create a `/logout` route that removes the cookie.
 
 ---
 
-## Considerações de Segurança
+## Security Considerations
 
-- **Não use esta implementação em produção sem melhorias**:
+- **Do not use this implementation in production without improvements**:
 
-  - **Senha em Texto Simples**: A senha é comparada em texto simples e armazenada em um cookie. Em produção, utilize hashes seguros e nunca armazene senhas em texto simples.
-  - **HTTPS**: Utilize HTTPS para garantir que as comunicações sejam criptografadas.
-  - **Cookies Seguros**: Marque os cookies como `Secure` e `HttpOnly` para prevenir ataques.
-  - **Bibliotecas de Autenticação**: Considere utilizar bibliotecas como `passport` para uma autenticação mais robusta.
-
----
-
-## Problemas Conhecidos e Soluções
-
-- **Redirecionamento não funciona no middleware**:
-
-  - **Problema**: O `res.redirect('/login.html')` não funcionava porque o middleware `passwordProtect` estava sendo aplicado após o middleware `express.static`.
-  - **Solução**: Mover o `passwordProtect` para antes do `express.static` no `index.js`.
-
-- **`req.cookies` não está definido**:
-
-  - **Problema**: O `req.cookies` estava indefinido porque o middleware `cookie-parser` não estava sendo usado.
-  - **Solução**: Instalar o `cookie-parser` com `npm install cookie-parser` e adicioná-lo aos middlewares no `index.js`.
+  - **Plain Text Password**: The password is compared in plain text and stored in a cookie. In production, use secure hashes and never store passwords in plain text.
+  - **HTTPS**: Use HTTPS to ensure communications are encrypted.
+  - **Secure Cookies**: Mark cookies as `Secure` and `HttpOnly` to prevent attacks.
+  - **Authentication Libraries**: Consider using libraries like `passport` for more robust authentication.
 
 ---
 
-## Licença
+## Known Issues and Solutions
 
-Este projeto está licenciado sob os termos da licença MIT.
+- **Redirection does not work in middleware**:
+
+  - **Problem**: The `res.redirect('/login.html')` was not working because the `passwordProtect` middleware was being applied after the `express.static` middleware.
+  - **Solution**: Move `passwordProtect` before `express.static` in `index.js`.
+
+- **`req.cookies` is undefined**:
+
+  - **Problem**: The `req.cookies` was undefined because the `cookie-parser` middleware was not being used.
+  - **Solution**: Install `cookie-parser` with `npm install cookie-parser` and add it to the middlewares in `index.js`.
 
 ---
 
-## Contato
+## License
 
-Para mais informações ou dúvidas, entre em contato com [seu-email@example.com](mailto:seu-email@example.com).
+This project is licensed under the terms of the MIT license.
 
 ---
 
-**Nota**: Este projeto foi desenvolvido como um exemplo educativo e pode requerer ajustes para uso em ambientes de produção.
+## Contact
+
+For more information or questions, contact [your-email@example.com](mailto:your-email@example.com).
+
+---
+
+**Note**: This project was developed as an educational example and may require adjustments for use in production environments.

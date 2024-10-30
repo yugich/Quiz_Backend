@@ -97,7 +97,7 @@ $(document).ready(function() {
             quizName: quizName,
             questions: questions
         };
-        console.log('Dados enviados para criação:', quizData);
+        console.log('Data sent for creation:', quizData);
         // Enviar o quiz para o backend
         $.ajax({
             url: '/api/quiz/register',
@@ -113,7 +113,7 @@ $(document).ready(function() {
                 loadQuizzes();
             },
             error: function(xhr) {
-                alert('Erro ao criar o quiz: ' + xhr.responseJSON.error);
+                alert('Error creating quiz: ' + xhr.responseJSON.error);
             }
         });
     });
@@ -139,7 +139,7 @@ $(document).ready(function() {
                 });
             },
             error: function() {
-                alert('Erro ao carregar os quizzes.');
+                alert('Error loading quizzes.');
             }
         });
     }
@@ -152,7 +152,7 @@ $(document).ready(function() {
 
     $('#quizTableBody').on('click', '.deleteQuizBtn', function() {
         const quizId = $(this).data('id');
-        if (confirm('Tem certeza de que deseja deletar este quiz?')) {
+        if (confirm('Are you sure you want to delete this quiz?')) {
             $.ajax({
                 url: `/api/quiz/delete/${quizId}`,
                 method: 'DELETE',
@@ -161,7 +161,7 @@ $(document).ready(function() {
                     loadQuizzes();
                 },
                 error: function(xhr) {
-                    alert('Erro ao deletar o quiz: ' + xhr.responseJSON.error);
+                    alert('Error deleting quiz: ' + xhr.responseJSON.error);
                 }
             });
         }
