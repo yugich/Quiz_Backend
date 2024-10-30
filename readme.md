@@ -267,20 +267,6 @@ The application implements simple password protection using HTTP cookies.
 
 ---
 
-## Known Issues and Solutions
-
-- **Redirection does not work in middleware**:
-
-  - **Problem**: The `res.redirect('/login.html')` was not working because the `passwordProtect` middleware was being applied after the `express.static` middleware.
-  - **Solution**: Move `passwordProtect` before `express.static` in `index.js`.
-
-- **`req.cookies` is undefined**:
-
-  - **Problem**: The `req.cookies` was undefined because the `cookie-parser` middleware was not being used.
-  - **Solution**: Install `cookie-parser` with `npm install cookie-parser` and add it to the middlewares in `index.js`.
-
----
-
 ## License
 
 This project is licensed under the terms of the MIT license.
