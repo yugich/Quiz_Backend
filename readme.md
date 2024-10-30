@@ -289,7 +289,7 @@ This project is licensed under the terms of the MIT license.
 
 ## Contact
 
-For more information or questions, contact [your-email@example.com](mailto:caio@caiohv.com).
+For more information or questions, contact [caio@caiohv.com](mailto:caio@caiohv.com).
 
 ---
 
