@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Sorteio do Número da Sorte</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h1 class="text-center">Sorteio do Número da Sorte</h1>
+
+        <!-- Seleção de Data para o Sorteio -->
+        <div class="mt-5">
+            <h3>Selecione a Data do Sorteio</h3>
+            <form id="drawForm" class="form-inline justify-content-center">
+                <div class="form-group mb-2">
+                    <label for="drawDate" class="sr-only">Data</label>
+                    <input type="date" class="form-control" id="drawDate" placeholder="Data do Sorteio">
+                </div>
+                <button type="submit" class="btn btn-primary mb-2 ml-2">Realizar Sorteio</button>
+            </form>
+        </div>
+
+        <!-- Área da Animação -->
+        <div class="mt-5 text-center" id="animationContainer" style="display: none;">
+            <h3>Realizando o Sorteio...</h3>
+            <canvas id="animationCanvas" style="width: 100%; height: 400px;"></canvas>
+        </div>
+
+        <!-- Exibição do Resultado do Sorteio -->
+        <div class="mt-5" id="drawResult" style="display: none;">
+            <h3>Resultado do Sorteio</h3>
+            <p><strong>Número da Sorte:</strong> <span id="luckyNumber"></span></p>
+            <p><strong>Nome:</strong> <span id="winnerName"></span></p>
+            <p><strong>E-mail:</strong> <span id="winnerEmail" style="display: none;"></span></p>
+            <button id="toggleEmailBtn" class="btn btn-secondary">Mostrar E-mail</button>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Custom JS -->
+    <script src="/js/draw.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+body {
+    background-color: #f8f9fa;
+}
+
+h1, h3 {
+    color: #343a40;
+}
+
+.table {
+    background-color: #fff;
+}
+
+#searchInput {
+    width: 100%;
+}
+
+/* Esconder a coluna de e-mail por padrão no ranking */
+#scoreRankingTable .email-column {
+    display: table-cell;
+}
+
+#animationCanvas {
+    width: 100% !important;
+    height: 400px !important;
+}

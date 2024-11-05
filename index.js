@@ -10,11 +10,16 @@ app.use(cookieParser());
 
 app.use('/index.html', passwordProtect);
 app.use('/edit.html', passwordProtect);
+app.use('/user-dashboard.html', passwordProtect);
+app.use('/draw.html', passwordProtect);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 const quizRegisterRouter = require('./api/quiz-register');
 app.use('/api/quiz', quizRegisterRouter);
+
+const userRegisterRouter = require('./api/user-register');
+app.use('/api/users', userRegisterRouter);
 
 const PASSWORD = process.env.PASSWORD;
 
