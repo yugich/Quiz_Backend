@@ -1,7 +1,3 @@
-Aqui está a atualização do `README` para incluir o registro de usuários no projeto:
-
----
-
 # Quiz App Project with Node.js and Azure Cosmos DB
 
 Este projeto é uma aplicação web construída com Node.js, Express e Azure Cosmos DB, permitindo criar, editar, visualizar e deletar quizzes interativos, além de gerenciar registros de usuários. A aplicação inclui front-end em HTML, CSS e JavaScript, utilizando Bootstrap para estilo, e autenticação básica com proteção por senha.
