@@ -1,6 +1,10 @@
+Aqui está a atualização do `README` para incluir o registro de usuários no projeto:
+
+---
+
 # Quiz App Project with Node.js and Azure Cosmos DB
 
-This project is a web application built with Node.js, Express, and Azure Cosmos DB, allowing you to create, edit, view, and delete interactive quizzes. The application includes a front-end in HTML, CSS, and JavaScript, utilizing Bootstrap for styling, and implements basic authentication with password protection.
+Este projeto é uma aplicação web construída com Node.js, Express e Azure Cosmos DB, permitindo criar, editar, visualizar e deletar quizzes interativos, além de gerenciar registros de usuários. A aplicação inclui front-end em HTML, CSS e JavaScript, utilizando Bootstrap para estilo, e autenticação básica com proteção por senha.
 
 ## Table of Contents
 
@@ -25,7 +29,7 @@ This project is a web application built with Node.js, Express, and Azure Cosmos 
 
 - **Node.js**: Server-side JavaScript runtime environment.
 - **Express**: Web framework for Node.js.
-- **Azure Cosmos DB**: Fully managed NoSQL database used to store the quizzes.
+- **Azure Cosmos DB**: Fully managed NoSQL database used to store the quizzes and user data.
 - **Bootstrap**: Front-end library for responsive styling.
 - **jQuery**: JavaScript library for DOM manipulation and AJAX requests.
 - **dotenv**: Load environment variables from a `.env` file.
@@ -82,6 +86,7 @@ This project is a web application built with Node.js, Express, and Azure Cosmos 
    COSMOSDB_KEY=<YOUR_COSMOSDB_PRIMARY_KEY>
    COSMOSDB_DATABASE=QuizDatabase
    COSMOSDB_CONTAINER=Quizzes
+   COSMOSDB_USER_CONTAINER=Users
    PASSWORD=<YOUR_DESIRED_PASSWORD>
    PORT=3000
    ```
@@ -126,7 +131,13 @@ Server running on port 3000
    - Enter the password defined in the `.env` file.
    - After a successful login, you will be redirected to the main page.
 
-3. **Create a Quiz**:
+3. **User Registration**:
+
+   - Navigate to the user registration page to add new users.
+   - Enter user details including **Name**, **Email**, **Extra Information**, and **Score**.
+   - A unique 5-digit lucky number will be automatically generated for each user, ensuring it is unique per day.
+
+4. **Create a Quiz**:
 
    - Click the **"Create Quiz"** button.
    - Fill in the quiz name.
@@ -135,17 +146,17 @@ Server running on port 3000
      - Check the **"Is True"** box to indicate the correct answers.
    - Click **"Save Quiz"** to save.
 
-4. **View Quizzes**:
+5. **View Quizzes**:
 
    - Below the "Create Quiz" button, you will see a table listing all quizzes with **ID**, **Name**, and **Actions**.
 
-5. **Edit a Quiz**:
+6. **Edit a Quiz**:
 
    - Click the **"Edit"** button corresponding to the quiz you want to edit.
    - A new tab will open with the form pre-filled with the current data.
    - Make the desired changes and click **"Save Quiz"**.
 
-6. **Delete a Quiz**:
+7. **Delete a Quiz**:
 
    - Click the **"Delete"** button corresponding to the quiz you want to delete.
    - Confirm the action in the confirmation window.
@@ -155,9 +166,73 @@ Server running on port 3000
 
 The application exposes the following endpoints:
 
+#### User Management
+
+- **Register a User**:
+
+  ```http
+  POST /api/users
+  ```
+
+  - Request body (JSON):
+
+    ```json
+    {
+      "name": "Bartolomeu",
+      "email": "bart@gmail.com",
+      "extrasInformation": "Informações extras",
+      "score": 0
+    }
+    ```
+
+  - A successful request creates a user and automatically generates a unique 5-digit lucky number for the user.
+
+- **Edit a User**:
+
+  ```http
+  PUT /api/users/{id}
+  ```
+
+  - Request body (JSON):
+
+    ```json
+    {
+      "name": "Novo Nome",
+      "email": "novoemail@example.com",
+      "extrasInformation": "Informações atualizadas",
+      "score": 10
+    }
+    ```
+
+- **Get All Users**:
+
+  ```http
+  GET /api/users/all
+  ```
+
+- **Get User Count by Date Range**:
+
+  ```http
+  GET /api/users/count?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
+  ```
+
+- **List Users by Date Range**:
+
+  ```http
+  GET /api/users?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
+  ```
+
+- **Draw a Lucky Number**:
+
+  ```http
+  GET /api/users/draw?date=YYYY-MM-DD
+  ```
+
+#### Quiz Management
+
 - **Register a Quiz**:
 
-  ```
+  ```http
   POST /api/quiz/register
   ```
 
@@ -182,20 +257,20 @@ The application exposes the following endpoints:
 
 - **Get All Quizzes**:
 
-  ```
+  ```http
   GET /api/quiz/all
   ```
 
 - **Search a Quiz by ID or Name**:
 
-  ```
+  ```http
   GET /api/quiz/search?id={id}
   GET /api/quiz/search?name={name}
   ```
 
 - **Edit a Quiz**:
 
-  ```
+  ```http
   PUT /api/quiz/edit/{id}
   ```
 
@@ -203,29 +278,32 @@ The application exposes the following endpoints:
 
 - **Delete a Quiz**:
 
-  ```
+  ```http
   DELETE /api/quiz/delete/{id}
   ```
 
----
+--- 
 
 ## Project Structure
 
 ```
 ├── api
-│   └── quiz-register.js       # API routes for quiz management
+│   ├── quiz-register.js       # API routes for quiz management
+│   └── user-register.js       # API routes for user management
 ├── middlewares
 │   └── passwordProtect.js     # Middleware for password protection
 ├── public
 │   ├── index.html             # Main page
 │   ├── edit.html              # Quiz editing page
 │   ├── login.html             # Login page
+│   ├── user-register.html     # User registration page
 │   ├── css
 │   │   └── styles.css         # (Optional) Custom styles file
 │   └── js
 │       ├── main.js            # Script for the main page
 │       ├── edit.js            # Script for the edit page
-│       └── login.js           # Script for the login page (if necessary)
+│       ├── login.js           # Script for the login page (if necessary)
+│       └── user-register.js   # Script for the user registration page
 ├── .env                       # Environment variables (not versioned)
 ├── index.js                   # Main server file
 ├── package.json               # Project dependencies and scripts
@@ -242,7 +320,9 @@ The application implements simple password protection using HTTP cookies.
 
   - Intercepts all requests and checks if the user is authenticated.
   - Allows access without authentication to the routes `/login.html`, `/login`, and any routes starting with `/chat`.
-  - Redirects to `/login.html` if the user is not authenticated.
+  - Redirects to `/login.html` if the user is not authenticated
+
+.
 
 - **Route `/login`**:
 
