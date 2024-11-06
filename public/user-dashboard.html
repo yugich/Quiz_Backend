@@ -16,12 +16,17 @@
         <div class="text-center mt-4">
             <a href="/draw.html" class="btn btn-success">Realizar Sorteio</a>
         </div>
-
+        <br>
         <!-- Gráfico de Registros por Mês -->
-        <div class="mt-5">
-            <h3>Registros Mensais</h3>
-            <canvas id="registrationChart"></canvas>
+        <!-- HTML para exibir o nome do mês com setas de navegação -->
+        <div id="monthNavigation" style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <button id="prevMonthBtn">←</button>
+            <span id="currentMonth" style="margin: 0 10px; font-weight: bold;"></span>
+            <button id="nextMonthBtn">→</button>
         </div>
+
+        <!-- Elemento do gráfico -->
+        <canvas id="registrationChart"></canvas>
         
         <!-- Ranking de Pontuação -->
         <div class="mt-5">

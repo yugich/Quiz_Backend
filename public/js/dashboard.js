@@ -2,29 +2,49 @@
 
 $(document).ready(function() {
 
-    // Função para carregar o gráfico de registros mensais
-    function loadRegistrationChart() {
+    // Variáveis para o gráfico, o mês e o ano atuais
+    let registrationChart;
+    let currentMonth = new Date().getMonth(); // Mês atual (0-11)
+    let currentYear = new Date().getFullYear(); // Ano atual
+
+    // Função para atualizar o texto do mês e ano no topo
+    function updateMonthLabel() {
+        const monthName = new Date(currentYear, currentMonth).toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+        $('#currentMonth').text(monthName.charAt(0).toUpperCase() + monthName.slice(1)); // Capitaliza o mês
+    }
+
+    // Função para carregar o gráfico de registros diários
+    function loadRegistrationChart(month = currentMonth, year = currentYear) {
         $.ajax({
             url: '/api/users',
             method: 'GET',
             success: function(data) {
-                let monthlyCounts = Array(12).fill(0);
+                let daysInMonth = new Date(year, month + 1, 0).getDate();
+                let dailyCounts = Array(daysInMonth).fill(0);
 
                 data.forEach(user => {
                     let date = new Date(user.timeStamp);
-                    let month = date.getMonth(); // 0-11
-                    monthlyCounts[month]++;
+                    if (date.getMonth() === month && date.getFullYear() === year) {
+                        let day = date.getDate() - 1; // Dia do mês (1-31), ajustado para índice 0
+                        dailyCounts[day]++;
+                    }
                 });
+
+                let labels = Array.from({length: daysInMonth}, (_, i) => (i + 1).toString());
 
                 let ctx = document.getElementById('registrationChart').getContext('2d');
 
-                let registrationChart = new Chart(ctx, {
+                if (registrationChart) {
+                    registrationChart.destroy();
+                }
+
+                registrationChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                        labels: labels,
                         datasets: [{
-                            label: 'Registros por Mês',
-                            data: monthlyCounts,
+                            label: `Registros em ${new Date(year, month).toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}`,
+                            data: dailyCounts,
                             backgroundColor: 'rgba(54, 162, 235, 0.6)',
                             borderColor: 'rgba(54, 162, 235, 1)',
                             borderWidth: 1
@@ -33,12 +53,18 @@ $(document).ready(function() {
                     options: {
                         responsive: true,
                         scales: {
-                            yAxes: [{
+                            x: {
+                                beginAtZero: true,
                                 ticks: {
-                                    beginAtZero: true,
-                                    precision:0
+                                    autoSkip: false
                                 }
-                            }]
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
                         }
                     }
                 });
@@ -49,13 +75,37 @@ $(document).ready(function() {
         });
     }
 
-    // Carregar o gráfico ao iniciar
+    // Inicializar o gráfico e exibir o mês atual ao iniciar
+    updateMonthLabel();
     loadRegistrationChart();
+
+    // Funções para navegar entre os meses
+    $('#prevMonthBtn').click(function() {
+        if (currentMonth === 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else {
+            currentMonth--;
+        }
+        updateMonthLabel();
+        loadRegistrationChart(currentMonth, currentYear);
+    });
+
+    $('#nextMonthBtn').click(function() {
+        if (currentMonth === 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else {
+            currentMonth++;
+        }
+        updateMonthLabel();
+        loadRegistrationChart(currentMonth, currentYear);
+    });
 
     // Função para obter a data de início da semana atual (domingo)
     function getStartOfWeek() {
         let now = new Date();
-        let dayOfWeek = now.getDay(); // 0 (Domingo) - 6 (Sábado)
+        let dayOfWeek = now.getDay();
         let start = new Date(now);
         start.setDate(now.getDate() - dayOfWeek);
         start.setHours(0, 0, 0, 0);
@@ -79,7 +129,6 @@ $(document).ready(function() {
         let startDate = $('#startDate').val();
         let endDate = $('#endDate').val();
 
-        // Se nenhuma data for fornecida, usar as datas da semana atual
         if (!startDate || !endDate) {
             startDate = getStartOfWeek();
             endDate = getEndOfWeek();
@@ -158,7 +207,6 @@ $(document).ready(function() {
             url: url,
             method: 'GET',
             success: function(data) {
-                // Ordena por score decrescente
                 data.sort((a, b) => b.score - a.score);
 
                 let tbody = $('#scoreRankingTable tbody');
@@ -192,7 +240,6 @@ $(document).ready(function() {
         let startDate = $('#scoreStartDate').val();
         let endDate = $('#scoreEndDate').val();
 
-        // Se nenhuma data for fornecida, carregar todos os usuários
         loadScoreRanking(startDate, endDate);
     });
 
