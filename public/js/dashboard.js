@@ -197,7 +197,7 @@ $(document).ready(function() {
 
     // Função para carregar o ranking de pontuação
     function loadScoreRanking(startDate, endDate) {
-        let url = '/api/users/all';
+        let url = '/api/users/ranking';
 
         if (startDate && endDate) {
             url = `/api/users?startDate=${startDate}&endDate=${endDate}`;
@@ -211,7 +211,6 @@ $(document).ready(function() {
 
                 let tbody = $('#scoreRankingTable tbody');
                 tbody.empty();
-
                 data.forEach((user, index) => {
                     let row = `
                         <tr>

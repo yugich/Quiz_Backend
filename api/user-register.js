@@ -196,6 +196,24 @@ router.get('/all', async (req, res) => {
     }
 });
 
+router.get('/ranking', async (req, res) => {
+    try {
+        const container = await containerPromise;
+
+        // Query para ordenar os usuários pelo score de forma decrescente e limitar o retorno aos 10 primeiros
+        const querySpec = {
+            query: 'SELECT TOP 10 c.name, c.email, c.score FROM c ORDER BY c.score DESC'
+        };
+
+        const { resources: topUsers } = await container.items.query(querySpec).fetchAll();
+
+        res.status(200).send(topUsers);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'An error occurred while fetching the top 10 users.' });
+    }
+});
+
 router.get('/draw', async (req, res) => {
     try {
         const container = await containerPromise;
