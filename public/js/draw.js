@@ -1,88 +1,41 @@
-// draw.js
-
 $(document).ready(function() {
+    let animationInterval;
+    let fireworks;
 
-    let scene, camera, renderer, animationId;
-    let cards = [];
-    let shuffling = true;
-
-    function initThreeJS() {
-        const canvas = document.getElementById('animationCanvas');
-
-        // Configuração básica da cena
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / 400, 0.1, 1000);
-        renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-        renderer.setSize(canvas.clientWidth, 400);
-
-        // Luz ambiente
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-        scene.add(ambientLight);
-
-        // Criar baralho de cartas
-        const cardWidth = 2;
-        const cardHeight = 3;
-        const cardGeometry = new THREE.PlaneGeometry(cardWidth, cardHeight);
-
-        const numberOfCards = 20; // Número de cartas a serem exibidas
-
-        for (let i = 0; i < numberOfCards; i++) {
-            // Gerar uma cor aleatória
-            const randomColor = Math.random() * 0xffffff;
-            const backMaterial = new THREE.MeshBasicMaterial({ color: randomColor }); // Cor aleatória para cada carta
-
-            const card = new THREE.Mesh(cardGeometry, backMaterial);
-
-            // Empilha as cartas com leve deslocamento
-            card.position.set(0, 0, -i * 0.01);
-            scene.add(card);
-            cards.push(card);
-        }
-
-        camera.position.z = 7;
-
-        animate();
+    function startSlotMachine() {
+        const slotMachine = $('#slotMachine');
+        animationInterval = setInterval(() => {
+            const randomNum = Math.floor(10000 + Math.random() * 90000); // Número aleatório de 100 a 999
+            slotMachine.text(randomNum);
+        }, 100); // Atualiza o número a cada 100 ms
     }
 
-    function animate() {
-        animationId = requestAnimationFrame(animate);
-
-        if (shuffling) {
-            // Animação de embaralhamento
-            cards.forEach((card, index) => {
-                // Rotação aleatória
-                card.rotation.y += 0.1 * Math.random();
-                card.rotation.z += 0.1 * Math.random();
-
-                // Movimentação aleatória
-                card.position.x += 0.1 * (Math.random() - 0.5);
-                card.position.y += 0.1 * (Math.random() - 0.5);
-                card.position.z += 0.1 * (Math.random() - 0.5);
-
-                // Limites para manter as cartas na cena
-                if (card.position.x > 5) card.position.x = 5;
-                if (card.position.x < -5) card.position.x = -5;
-                if (card.position.y > 5) card.position.y = 5;
-                if (card.position.y < -5) card.position.y = -5;
-            });
-        }
-
-        renderer.render(scene, camera);
+    function stopSlotMachine(winningNumber) {
+        clearInterval(animationInterval);
+        $('#slotMachine').text(winningNumber);
     }
 
-    function stopAnimation() {
-        cancelAnimationFrame(animationId);
-        shuffling = false;
-        // Limpa a cena
-        while (scene.children.length > 0) {
-            scene.remove(scene.children[0]);
-        }
-        renderer.dispose();
+    function showFireworks() {
+        const container = document.querySelector('.fireworks');
+        fireworks = new Fireworks.default(container, {
+            speed: 2,
+            acceleration: 1.05,
+            friction: 0.97,
+            gravity: 1.5,
+            particles: 150,
+            trace: 3,
+            explosion: 5
+        });
+        fireworks.start();
+
+        setTimeout(() => {
+            fireworks.stop();
+            $('#drawResult').show();
+        }, 3000); // Mostra o resultado após 3 segundos de fogos de artifício
     }
 
     $('#drawForm').submit(function(e) {
         e.preventDefault();
-
         let drawDate = $('#drawDate').val();
 
         if (!drawDate) {
@@ -90,50 +43,35 @@ $(document).ready(function() {
             return;
         }
 
-        // Esconde o formulário e mostra a animação
-        $('#drawForm').hide();
-        $('#drawResult').hide();
+        $('#interfaceContainer').hide();
         $('#animationContainer').show();
+        $('#drawResult').hide();
 
-        // Inicia a animação
-        initThreeJS();
+        // Inicia a animação da slot machine
+        startSlotMachine();
 
-        // Após 3 segundos, realiza o sorteio
+        // Aguarda 5 segundos, então exibe o resultado
         setTimeout(function() {
-            // Para a animação
-            stopAnimation();
-            $('#animationContainer').hide();
-
-            // Faz a requisição AJAX para obter o resultado do sorteio
             $.ajax({
                 url: `/api/users/draw?date=${drawDate}`,
                 method: 'GET',
                 success: function(data) {
+                    stopSlotMachine(data.luckyNumber);
                     $('#luckyNumber').text(data.luckyNumber);
                     $('#winnerName').text(data.name);
-                    $('#winnerEmail').text(data.email);
+                    $('#winnerEmail').text(data.email).hide();
 
-                    // Esconde o email e configura o botão
-                    $('#winnerEmail').hide();
-                    $('#toggleEmailBtn').text('Mostrar E-mail');
-
-                    $('#drawResult').show();
+                    showFireworks();
                 },
                 error: function(err) {
                     console.error('Erro ao realizar o sorteio:', err);
-                    if (err.status === 404) {
-                        alert('Nenhum usuário encontrado para a data selecionada.');
-                    } else {
-                        alert('Ocorreu um erro ao realizar o sorteio.');
-                    }
-                    // Mostra novamente o formulário
-                    $('#drawForm').show();
+                    $('#interfaceContainer').show();
                 }
             });
-        }, 3000); // Tempo da animação em milissegundos (3 segundos)
+        }, 5000); // Duração da animação em milissegundos
     });
 
-    // Evento para mostrar/ocultar o email
+    // Botão para mostrar/ocultar o email
     $('#toggleEmailBtn').click(function() {
         let emailSpan = $('#winnerEmail');
         if (emailSpan.is(':visible')) {
@@ -144,5 +82,4 @@ $(document).ready(function() {
             $(this).text('Ocultar E-mail');
         }
     });
-
 });
