@@ -11,7 +11,6 @@ app.use(cookieParser());
 app.use('/index.html', passwordProtect);
 app.use('/edit.html', passwordProtect);
 app.use('/user-dashboard.html', passwordProtect);
-app.use('/draw.html', passwordProtect);
 
 app.use(express.static(path.join(__dirname, 'public')));
 

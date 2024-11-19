@@ -258,4 +258,102 @@ $(document).ready(function() {
         }
     });
 
+    // Função para exportar dados para um arquivo XLSX
+    function exportToXlsx(data, filename = 'usuarios.xlsx') {
+        const worksheet = XLSX.utils.json_to_sheet(data);
+
+        // Aplicar estilo de quebra de linha para todas as células
+        Object.keys(worksheet).forEach(cell => {
+            if (cell[0] === '!') return; // Ignorar metadados do SheetJS
+            worksheet[cell].s = {
+                alignment: {
+                    wrapText: true, // Quebra de linha automática
+                    vertical: 'top',
+                    horizontal: 'left',
+                }
+            };
+        });
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Usuários');
+        XLSX.writeFile(workbook, filename);
+    }
+
+    // Função para processar extrasInformation
+    function processExtrasInformation(info) {
+        let result = { 'Informações Extras': '' };
+
+        if (typeof info === 'string') {
+            try {
+                const parsedJson = JSON.parse(info.split('\n').pop()); // Tenta parsear o JSON após o último '\n'
+                result['Informações Extras'] = info.split('\n')[0]; // Parte textual antes do JSON
+
+                // Adiciona chaves do JSON, ignorando conflitos
+                Object.entries(parsedJson).forEach(([key, value]) => {
+                    if (!result[key]) {
+                        if (Array.isArray(value)) {
+                            // Formata listas como itens numerados
+                            result[key] = value.map((item, index) => `(${index + 1}) ${JSON.stringify(item, null, 2)}`).join('\n');
+                        } else {
+                            result[key] = value;
+                        }
+                    }
+                });
+            } catch (e) {
+                // Se não for JSON, mantém como texto completo
+                result['Informações Extras'] = info;
+            }
+        } else {
+            result['Informações Extras'] = info;
+        }
+
+        return result;
+    }
+
+    // Evento para exportar dados ao clicar no botão
+    $('#exportXlsxBtn').click(function () {
+        const startDate = $('#startDate').val();
+        const endDate = $('#endDate').val();
+
+        if (!startDate || !endDate) {
+            alert('Por favor, selecione um intervalo de datas antes de exportar.');
+            return;
+        }
+
+        $.ajax({
+            url: `/api/users?startDate=${startDate}&endDate=${endDate}`,
+            method: 'GET',
+            success: function (data) {
+                // Preparação dos dados para exportação
+                let exportData = [];
+                data.forEach(user => {
+                    let baseInfo = {
+                        Nome: user.name,
+                        Email: user.email,
+                        Score: user.score,
+                        'Número da Sorte': user.luckyNumber || '',
+                        'Data de Registro': new Date(user.timeStamp).toLocaleDateString(),
+                    };
+
+                    let processedExtras = processExtrasInformation(user.extrasInformation);
+
+                    // Adiciona apenas colunas únicas
+                    Object.entries(processedExtras).forEach(([key, value]) => {
+                        if (!baseInfo[key]) {
+                            baseInfo[key] = value;
+                        }
+                    });
+
+                    exportData.push(baseInfo);
+                });
+
+                exportToXlsx(exportData);
+            },
+            error: function (err) {
+                console.error('Erro ao exportar os dados:', err);
+                alert('Erro ao exportar dados. Por favor, tente novamente.');
+            }
+        });
+    });
+
 });
