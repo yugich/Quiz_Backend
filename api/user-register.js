@@ -217,41 +217,52 @@ router.get('/ranking', async (req, res) => {
 router.get('/draw', async (req, res) => {
     try {
         const container = await containerPromise;
-        const { date } = req.query;
+        const { date, minScore } = req.query;
 
-        // Validação da data
+        // Validate date query parameter
         if (!date) {
             return res.status(400).send({ error: 'Date query parameter is required.' });
         }
 
-        // Obter o início e fim do dia fornecido em UTC
+        // Parse and validate the provided date
         const providedDate = new Date(date);
         if (isNaN(providedDate)) {
             return res.status(400).send({ error: 'Invalid date format. Use YYYY-MM-DD.' });
         }
 
+        // Get the start and end of the provided day in UTC
         const startOfDay = new Date(Date.UTC(providedDate.getUTCFullYear(), providedDate.getUTCMonth(), providedDate.getUTCDate(), 0, 0, 0, 0));
         const endOfDay = new Date(Date.UTC(providedDate.getUTCFullYear(), providedDate.getUTCMonth(), providedDate.getUTCDate(), 23, 59, 59, 999));
 
-        // Consultar todos os usuários registrados na data fornecida
-        const querySpec = {
-            query: 'SELECT * FROM c WHERE c.timeStamp >= @startOfDay AND c.timeStamp <= @endOfDay',
-            parameters: [
-                { name: '@startOfDay', value: startOfDay.toISOString() },
-                { name: '@endOfDay', value: endOfDay.toISOString() }
-            ]
-        };
+        // Build the query with time constraints
+        let query = 'SELECT * FROM c WHERE c.timeStamp >= @startOfDay AND c.timeStamp <= @endOfDay';
+        const parameters = [
+            { name: '@startOfDay', value: startOfDay.toISOString() },
+            { name: '@endOfDay', value: endOfDay.toISOString() }
+        ];
 
+        // If minScore is provided and valid, add the score filter to the query
+        if (minScore !== undefined) {
+            const parsedScore = Number(minScore);
+            if (!isNaN(parsedScore)) {
+                query += ' AND c.score >= @minScore';
+                parameters.push({ name: '@minScore', value: parsedScore });
+            }
+        }
+
+        const querySpec = { query, parameters };
+
+        // Query users registered on the given date (and optionally with score filter)
         const { resources: users } = await container.items.query(querySpec).fetchAll();
 
         if (users.length === 0) {
-            return res.status(404).send({ error: 'No users found for the given date.' });
+            return res.status(404).send({ error: 'No users found for the given date (and score criteria).' });
         }
 
-        // Realizar o sorteio entre os usuários encontrados
+        // Randomly select a winner from the filtered users
         const winner = users[Math.floor(Math.random() * users.length)];
 
-        // Retornar os dados do vencedor
+        // Return the winner's information
         res.status(200).send({
             luckyNumber: winner.luckyNumber,
             name: winner.name,
